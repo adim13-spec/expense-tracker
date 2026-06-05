@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expense Tracker</title>
+    <link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#3cff90">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="app">
+
+    <!-- HEADER -->
+    <header>
+        <h1>Expense Tracker</h1>
+        <div class="month-selector" id="monthSelector">
+
+    <span class="month-icon">📅</span>
+
+    <span id="currentMonthLabel">
+        Ιούνιος 2026
+    </span>
+
+    <span class="month-arrow">
+        ❯
+    </span>
+
+    <input
+    type="month"
+    id="monthFilter"
+    hidden
+>
+
+</div>
+<div id="monthPopup" class="month-popup">
+
+    <div class="month-grid">
+
+        <button data-month="01">Ιαν</button>
+        <button data-month="02">Φεβ</button>
+        <button data-month="03">Μαρ</button>
+        <button data-month="04">Απρ</button>
+
+        <button data-month="05">Μαι</button>
+        <button data-month="06">Ιουν</button>
+        <button data-month="07">Ιουλ</button>
+        <button data-month="08">Αυγ</button>
+
+        <button data-month="09">Σεπ</button>
+        <button data-month="10">Οκτ</button>
+        <button data-month="11">Νοε</button>
+        <button data-month="12">Δεκ</button>
+
+    </div>
+
+</div>
+    </header>
+
+    <!-- DASHBOARD CARD -->
+    <section class="summary-card">
+
+        
+
+    <div class="summary-top">
+
+        <div class="wallet-circle">
+
+            <div class="wallet-icon">
+
+<svg
+    viewBox="0 0 64 64"
+    width="82"
+    height="82"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+>
+
+<path
+    d="M14 20
+       C14 16 17 14 21 14
+       H43
+       C47 14 50 17 50 21
+       V43
+       C50 47 47 50 43 50
+       H21
+       C17 50 14 47 14 43
+       Z"
+    stroke="#3cff90"
+    stroke-width="3"
+/>
+
+<path
+    d="M18 20
+       L40 20
+       C44 20 47 23 47 27"
+    stroke="#3cff90"
+    stroke-width="3"
+    stroke-linecap="round"
+/>
+
+<path
+    d="M40 28
+       H52
+       V38
+       H40
+       C37 38 35 36 35 33
+       C35 30 37 28 40 28
+       Z"
+    stroke="#3cff90"
+    stroke-width="3"
+/>
+
+<circle
+    cx="44"
+    cy="33"
+    r="2"
+    fill="#3cff90"
+/>
+
+</svg>
+
+</div>
+
+        </div>
+
+        <div class="summary-content">
+
+            <h3>Σύνολο Μήνα</h3>
+
+            <div id="total">0.00€</div>
+
+            <div class="summary-info">
+                <span>Εγγραφές: <b id="entriesCount">0</b></span>
+                <span>Μ.Ο./Ημέρα: <b id="avgDaily">0€</b></span>
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+    <!-- SEARCH -->
+    <section class="search-box">
+        <input
+            type="text"
+            id="searchInput"
+            placeholder="Αναζήτηση..."
+        >
+    </section>
+
+    <!-- CATEGORY FILTERS -->
+    <section class="categories">
+
+        <button class="cat-btn active">Όλα</button>
+        <button class="cat-btn">🚬 Τσιγάρα</button>
+        <button class="cat-btn">⛽ Βενζίνη</button>
+        <button class="cat-btn">🛒 Σούπερ Μάρκετ</button>
+        <button class="cat-btn">💡 Λογαριασμοί</button>
+        <button class="cat-btn">👕 Προσωπικά</button>
+        <button class="cat-btn">📦 Άλλα</button>
+
+    </section>
+
+    <!-- EXPENSES -->
+    <main id="expenses">
+
+    </main>
+<section id="statsSection" style="display:none;">
+
+    <div class="summary-card">
+
+        <h3>📊 Στατιστικά</h3>
+
+        <div id="statsContent">
+
+        </div>
+<h3 style="margin-top:20px;">
+    🥇 Top 3 Σπατάλες
+</h3>
+
+<div id="topExpenses">
+
+</div>
+    </div>
+
+</section>
+<section id="settingsSection" style="display:none;">
+
+    <div class="summary-card">
+
+        <h3>⚙️ Ρυθμίσεις</h3>
+
+        <h4>🎨 Χρώμα Θέματος</h4>
+
+        <div class="theme-buttons">
+
+            <button onclick="setTheme('#3cff90')">
+                Emerald
+            </button>
+
+            <button onclick="setTheme('#3ca6ff')">
+                Blue
+            </button>
+
+            <button onclick="setTheme('#b14dff')">
+                Purple
+            </button>
+
+            <button onclick="setTheme('#f5c542')">
+    Gold
+</button>
+
+            <button onclick="setTheme('#aaaaaa')">
+                Gray
+            </button>
+
+        </div>
+
+        <hr>
+<button id="exportBtn">
+    💾 Export Backup
+</button>
+
+<button id="importBtn">
+    📂 Import Backup
+</button>
+
+<input
+    type="file"
+    id="importFile"
+    accept=".json"
+    style="display:none;"
+>
+        <button id="clearDataBtn">
+            🗑️ Διαγραφή Όλων
+        </button>
+
+    </div>
+
+</section>
+</div>
+
+<!-- FLOATING BUTTON -->
+<button id="addBtn">+</button>
+<!-- MODAL -->
+
+<div id="expenseModal" class="modal">
+
+    <div class="modal-content">
+
+        <h2>Νέο Έξοδο</h2>
+
+        <label>Κατηγορία</label>
+
+        <select id="modalCategory">
+            <option>Τσιγάρα</option>
+            <option>Βενζίνη</option>
+            <option>Σούπερ Μάρκετ</option>
+            <option>Λογαριασμοί</option>
+            <option>Προσωπικά</option>
+            <option>Άλλα</option>
+        </select>
+
+        <label>Ποσό (€)</label>
+        <input type="number" id="modalAmount">
+
+        <label>Ημερομηνία</label>
+        <input type="date" id="modalDate">
+
+        <label>Σημείωση</label>
+        <input
+            type="text"
+            id="modalNote"
+            placeholder="Προαιρετικό"
+        >
+
+        <div class="modal-buttons">
+
+            <button id="cancelBtn">
+                Ακύρωση
+            </button>
+
+            <button id="saveBtn">
+                Αποθήκευση
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
+
+    <button class="nav-btn active">
+        🏠
+        <span>Έξοδα</span>
+    </button>
+
+    <button class="nav-btn">
+        📊
+        <span>Στατιστικά</span>
+    </button>
+
+    <button class="nav-btn">
+        ⚙️
+        <span>Ρυθμίσεις</span>
+    </button>
+
+</nav>
+
+<script src="app.js"></script>
+
+</body>
+</html>
