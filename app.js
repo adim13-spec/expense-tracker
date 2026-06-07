@@ -786,7 +786,37 @@ document.getElementById(
 renderChart(totals);
 }
 function setTheme(color){
+let statusBar = "#0a0a0a";
 
+if(color === "#3cff90")
+    statusBar = "#051a0f";
+
+if(color === "#3ca6ff")
+    statusBar = "#05111a";
+
+if(color === "#b14dff")
+    statusBar = "#12051a";
+
+if(color === "#f5c542")
+    statusBar = "#1a1505";
+
+if(color === "#ff4d4d")
+    statusBar = "#1a0505";
+
+if(color === "#ff66cc")
+    statusBar = "#1a0814";
+
+if(color === "#ff7a00")
+    statusBar = "#1a0d05";
+
+document
+.querySelector(
+    'meta[name="theme-color"]'
+)
+.setAttribute(
+    "content",
+    statusBar
+);
     document.documentElement
     .style.setProperty(
         '--primary',
@@ -861,7 +891,10 @@ document
     localStorage.setItem(
         "themeColor",
         color
-    );
+    );localStorage.setItem(
+    "statusBarColor",
+    statusBar
+);
 }
 
 
