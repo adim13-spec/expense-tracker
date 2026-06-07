@@ -177,13 +177,20 @@
         <div id="statsContent">
 
         </div>
-<h3 style="margin-top:20px;">
-    🥇 Top 3 Σπατάλες
+        <div
+    style="
+    max-width:320px;
+    margin:20px auto;
+    ">
+    <canvas id="expensesChart"></canvas>
+</div>
+<div id="statsCards"></div>
+
+<h3 style="margin-top:25px;">
+    🥇 Top 3 Εξοδα
 </h3>
 
-<div id="topExpenses">
-
-</div>
+<div id="topExpenses"></div>
     </div>
 
 </section>
@@ -197,27 +204,35 @@
 
         <div class="theme-buttons">
 
-            <button onclick="setTheme('#3cff90')">
-                Emerald
-            </button>
+    <button class="theme-dot emerald"
+    data-color="#3cff90"
+    onclick="setTheme('#3cff90')"></button>
 
-            <button onclick="setTheme('#3ca6ff')">
-                Blue
-            </button>
+<button class="theme-dot blue"
+    data-color="#3ca6ff"
+    onclick="setTheme('#3ca6ff')"></button>
 
-            <button onclick="setTheme('#b14dff')">
-                Purple
-            </button>
+<button class="theme-dot purple"
+    data-color="#b14dff"
+    onclick="setTheme('#b14dff')"></button>
 
-            <button onclick="setTheme('#f5c542')">
-    Gold
-</button>
+<button class="theme-dot gold"
+    data-color="#f5c542"
+    onclick="setTheme('#f5c542')"></button>
 
-            <button onclick="setTheme('#aaaaaa')">
-                Gray
-            </button>
+<button class="theme-dot red"
+    data-color="#ff4d4d"
+    onclick="setTheme('#ff4d4d')"></button>
 
-        </div>
+<button class="theme-dot pink"
+    data-color="#ff66cc"
+    onclick="setTheme('#ff66cc')"></button>
+
+<button class="theme-dot orange"
+    data-color="#ff7a00"
+    onclick="setTheme('#ff7a00')"></button>
+
+</div>
 
         <hr>
 <button id="exportBtn">
@@ -311,7 +326,8 @@
     </button>
 
 </nav>
-
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
 <script src="app.js"></script>
 
 </body>

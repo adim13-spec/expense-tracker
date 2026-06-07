@@ -401,7 +401,230 @@ navButtons.forEach((btn,index)=>{
 
 });
 let editingIndex = null;
+let expensesChart = null;
 
+function renderChart(totals){
+
+    const canvas =
+    document.getElementById(
+        "expensesChart"
+    );
+
+    if(!canvas) return;
+
+    if(expensesChart){
+
+        expensesChart.destroy();
+
+    }
+const topCategory =
+Object.entries(totals)
+.sort((a,b)=>b[1]-a[1])[0];
+
+const topName = topCategory[0];
+const topValue = topCategory[1];
+
+const totalValue =
+Object.values(totals)
+.reduce((a,b)=>a+b,0);
+
+const topPercent =
+Math.round(
+    (topValue / totalValue) * 100
+);
+    expensesChart = new Chart(canvas,{
+plugins:[
+{
+    id:"centerText",
+
+    afterDraw(chart){
+
+        const {ctx} = chart;
+
+        const meta =
+        chart.getDatasetMeta(0);
+
+        if(!meta.data.length) return;
+
+        const x =
+        meta.data[0].x;
+
+        const y =
+        meta.data[0].y;
+
+        ctx.save();
+
+        ctx.textAlign = "center";
+
+        let icon = "📦";
+
+        if(topName === "Τσιγάρα")
+            icon = "🚬";
+
+        if(topName === "Βενζίνη")
+            icon = "⛽";
+
+        if(topName === "Σούπερ Μάρκετ")
+            icon = "🛒";
+
+        if(topName === "Λογαριασμοί")
+            icon = "💡";
+
+        if(topName === "Προσωπικά")
+            icon = "👕";
+let centerColor = "#ffffff";
+
+if(topName === "Τσιγάρα")
+    centerColor = "#ff4d4d";
+
+if(topName === "Βενζίνη")
+    centerColor = "#ff7a00";
+
+if(topName === "Σούπερ Μάρκετ")
+    centerColor = "#3cff90";
+
+if(topName === "Λογαριασμοί")
+    centerColor = "#f5c542";
+
+if(topName === "Προσωπικά")
+    centerColor = "#b14dff";
+        ctx.font =
+            "28px sans-serif";
+
+        ctx.fillStyle =
+    centerColor;
+
+        ctx.fillText(
+            icon,
+            x,
+            y - 22
+        );
+
+        ctx.font =
+            "bold 14px sans-serif";
+
+        ctx.fillText(
+            topName,
+            x,
+            y + 2
+        );
+
+        ctx.font =
+            "bold 16px sans-serif";
+
+        ctx.fillStyle =
+    centerColor;
+
+        ctx.fillText(
+            topPercent + "%",
+            x,
+            y + 25
+        );
+
+        ctx.restore();
+
+    }
+
+},
+ChartDataLabels
+],
+
+
+        type:"doughnut",
+
+        data:{
+
+            labels:
+                Object.keys(totals),
+
+            datasets:[{
+
+                data:
+                    Object.values(totals),
+backgroundColor:
+Object.keys(totals).map(category => {
+
+    if(category === "Τσιγάρα")
+        return "#ff4d4d";
+
+    if(category === "Βενζίνη")
+        return "#ff7a00";
+
+    if(category === "Λογαριασμοί")
+        return "#f5c542";
+
+    if(category === "Σούπερ Μάρκετ")
+        return "#3cff90";
+
+    if(category === "Προσωπικά")
+        return "#b14dff";
+
+    return "#3ca6ff";
+
+}),
+
+    borderColor:"#111",
+
+    borderWidth:3
+
+}]
+
+        },
+
+        options:{
+
+    responsive:true,
+
+    cutout:"65%",
+
+    plugins:{
+
+    datalabels:{
+
+        color:"#fff",
+
+        font:{
+            weight:"bold",
+            size:14
+        },
+
+        formatter:(value,ctx)=>{
+
+            const data =
+            ctx.chart.data.datasets[0].data;
+
+            const total =
+            data.reduce((a,b)=>a+b,0);
+
+            const percent =
+Math.round(
+    (value/total)*100
+);
+
+const maxValue =
+Math.max(...data);
+
+if(value === maxValue){
+    return "";
+}
+
+return percent + "%";
+
+        }
+
+    },
+
+    legend:{
+        display:false
+    }
+
+}
+
+}
+
+});
+
+}
 function editExpense(index){
 
     const expense =
@@ -430,6 +653,7 @@ function editExpense(index){
 function renderStats(){
 
     const totals = {};
+    
 
 const filteredExpenses =
     expenses.filter(item =>
@@ -440,15 +664,19 @@ const filteredExpenses =
 
 filteredExpenses.forEach(item => {
 
-        if(!totals[item.category]){
+    if(!totals[item.category]){
 
-            totals[item.category] = 0;
+        totals[item.category] = 0;
 
-        }
+    }
 
-        totals[item.category] += item.amount;
+    totals[item.category] += item.amount;
 
-    });
+});
+
+const totalAmount =
+Object.values(totals)
+.reduce((a,b)=>a+b,0);
 
     let html = "";
 
@@ -496,14 +724,66 @@ Object.entries(totals)
     </div>
     `;
 });
- document.getElementById(
-    "statsContent"
-).innerHTML = html;
 
+let cardsHtml = "";
+
+Object.entries(totals)
+.forEach(([category,total])=>{
+
+    const percent =
+    ((total/totalAmount)*100)
+    .toFixed(0);
+let colorClass = "blue";
+
+if(category === "Τσιγάρα")
+    colorClass = "red";
+
+if(category === "Βενζίνη")
+    colorClass = "orange";
+
+if(category === "Σούπερ Μάρκετ")
+    colorClass = "green";
+
+if(category === "Λογαριασμοί")
+    colorClass = "gold";
+
+if(category === "Προσωπικά")
+    colorClass = "purple";
+
+if(category === "Άλλα")
+    colorClass = "blue";
+    cardsHtml += `
+
+    <div class="stat-card ${colorClass}">
+
+        <div class="stat-icon">
+            ${getCategoryIcon(category)}
+        </div>
+
+        <div class="stat-name">
+            ${category}
+        </div>
+
+        <div class="stat-value">
+            ${total.toFixed(2)}€
+        </div>
+
+        <div class="stat-percent">
+            ${percent}%
+        </div>
+
+    </div>
+
+    `;
+});
+
+document.getElementById(
+    "statsCards"
+).innerHTML = cardsHtml;
 document.getElementById(
     "topExpenses"
 ).innerHTML = topHtml;
-
+renderChart(totals);
 }
 function setTheme(color){
 
@@ -512,8 +792,27 @@ function setTheme(color){
         '--primary',
         color
     );
+document.body.classList.remove(
+    "theme-pulse"
+);
 
+void document.body.offsetWidth;
+
+document.body.classList.add(
+    "theme-pulse"
+);
     let rgb = "60,255,144";
+    if(color === "#ff4d4d"){
+    rgb = "255,77,77";
+}
+
+if(color === "#ff66cc"){
+    rgb = "255,102,204";
+}
+
+if(color === "#ff7a00"){
+    rgb = "255,122,0";
+}
 
     if(color === "#3ca6ff"){
         rgb = "60,166,255";
@@ -546,12 +845,25 @@ if(color === "#f5c542"){
         '--glow3',
         `rgba(${rgb},.08)`
     );
+document
+.querySelectorAll(".theme-dot")
+.forEach(btn=>{
 
+    btn.classList.remove("active");
+
+    if(btn.dataset.color === color){
+
+        btn.classList.add("active");
+
+    }
+
+});
     localStorage.setItem(
         "themeColor",
         color
     );
 }
+
 
 const savedTheme =
 localStorage.getItem("themeColor");
