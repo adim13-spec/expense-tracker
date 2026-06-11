@@ -1,5 +1,4 @@
-const CACHE_NAME = "expense-app-v1";
-
+const CACHE_NAME = "expense-app-v3";
 const FILES_TO_CACHE = [
     "./",
     "./index.html",
