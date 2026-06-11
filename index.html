@@ -16,17 +16,28 @@
     <header>
         <h1>Expense Tracker</h1>
         <div class="month-selector" id="monthSelector">
+            
 
     <span class="month-icon">📅</span>
 
     <span id="currentMonthLabel">
         Ιούνιος 2026
     </span>
+    <span
+    id="currentDayLabel"
+    style="
+        margin-left:12px;
+        cursor:pointer;
+    "
+>
+    📆 Σήμερα
+</span>
 
-    <span class="month-arrow">
-        ❯
-    </span>
-
+<input
+    type="date"
+    id="dayFilter"
+    hidden
+>
     <input
     type="month"
     id="monthFilter"
@@ -56,10 +67,20 @@
     </div>
 
 </div>
+<div id="dayPopup" class="month-popup">
+
+    <div
+        class="month-grid"
+        id="dayGrid">
+    </div>
+
+</div>
     </header>
 
     <!-- DASHBOARD CARD -->
-    <section class="summary-card">
+    <section
+    class="summary-card"
+    id="dashboardCard">
 
         
 
@@ -127,15 +148,29 @@
 
         <div class="summary-content">
 
-            <h3>Σύνολο Μήνα</h3>
+            <div class="totals-row">
 
-            <div id="total">0.00€</div>
+    <div class="total-box">
 
-            <div class="summary-info">
-                <span>Εγγραφές: <b id="entriesCount">0</b></span>
-                <span>Μ.Ο./Ημέρα: <b id="avgDaily">0€</b></span>
-            </div>
+        <h3>Σύνολο Ημέρας</h3>
 
+        <div id="dailyTotal">
+            0.00€
+        </div>
+
+    </div>
+
+    <div class="total-box">
+
+        <h3>Σύνολο Μήνα</h3>
+
+        <div id="total">
+            0.00€
+        </div>
+
+    </div>
+
+</div>
         </div>
 
     </div>

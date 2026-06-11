@@ -907,4 +907,94 @@ button:active{
     opacity:.7;
 
     margin-top:6px;
+}.totals-row{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    gap:20px;
+}
+
+.total-box{
+
+    flex:1;
+}
+
+.total-box h3{
+
+    margin-bottom:8px;
+}
+
+#dailyTotal,
+#total{
+
+    font-size:2rem;
+
+    font-weight:700;
+}
+#dayPopup button.active{
+
+    background:var(--primary);
+
+    color:#000;
+
+    font-weight:bold;
+
+    box-shadow:
+    0 0 15px var(--primary);
+
+}#dayGrid{
+
+    grid-template-columns:
+    repeat(7,1fr);
+
+}.weekday-header{
+
+    text-align:center;
+
+    font-weight:700;
+
+    color:var(--primary);
+
+    padding:8px 0;
+
+}#dayGrid div{
+
+    min-height:42px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+}#dayPopup button.today{
+
+    box-shadow:
+        0 0 8px rgba(255,255,255,.7),
+        0 0 16px rgba(255,255,255,.4);
+
+    border:1px solid rgba(255,255,255,.5);
+
+}#monthPopup button.active-month{
+
+    background:var(--primary);
+
+    color:#000;
+
+    font-weight:bold;
+
+    box-shadow:
+        0 0 15px var(--primary);
+
+}#monthPopup button.today-month{
+
+    border:1px solid
+    rgba(255,255,255,.6);
+
+    box-shadow:
+        0 0 8px rgba(255,255,255,.5),
+        0 0 16px rgba(255,255,255,.25);
+
 }

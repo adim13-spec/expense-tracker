@@ -18,8 +18,10 @@ const greekMonths = [
 ];
 let searchText = "";
 let selectedCategory = "Όλα";
+let selectedDay = "";
 render();
 updateMonthLabel();
+buildDayPopup();
 
 document
 .getElementById("monthFilter")
@@ -30,8 +32,43 @@ document
 .addEventListener("change",(e)=>{
 
     selectedMonth = e.target.value;
+    
 
     updateMonthLabel();
+
+    render();
+
+});
+document
+.getElementById("currentDayLabel")
+.addEventListener("click",()=>{
+
+    document
+    .getElementById("dayPopup")
+    .classList.toggle("show");
+
+});
+document
+.getElementById("dayFilter")
+.addEventListener("change",(e)=>{
+
+    selectedDay = e.target.value;
+
+    const today =
+    new Date()
+    .toISOString()
+    .split("T")[0];
+
+    document
+    .getElementById("currentDayLabel")
+    .textContent =
+
+    selectedDay === today
+
+    ? "📆 Σήμερα"
+
+    : "📆 " +
+      formatDate(selectedDay);
 
     render();
 
@@ -116,16 +153,176 @@ function saveData(){
         JSON.stringify(expenses)
     );
 }
+function formatDate(date){
+
+    const [year,month,day] =
+        date.split("-");
+
+    return `${day}/${month}/${year}`;
+
+}
+
+function buildDayPopup(){
+
+    const dayGrid =
+    document.getElementById("dayGrid");
+
+    dayGrid.innerHTML = "";
+  const [year,month] =
+selectedMonth.split("-");
+
+const weekdays = [
+    "ΔΕ",
+    "ΤΡ",
+    "ΤΕ",
+    "ΠΕ",
+    "ΠΑ",
+    "ΣΑ",
+    "ΚΥ"
+];
+
+weekdays.forEach(day=>{
+
+    const header =
+    document.createElement("div");
+
+    header.textContent = day;
+
+    header.className =
+    "weekday-header";
+
+    dayGrid.appendChild(header);
+
+});
+
+const firstDay =
+new Date(
+    year,
+    month - 1,
+    1
+).getDay();
+
+const offset =
+firstDay === 0
+? 6
+: firstDay - 1;
+
+for(let i=0; i<offset; i++){
+
+    const empty =
+    document.createElement("div");
+
+    dayGrid.appendChild(empty);
+
+}
+    const daysInMonth =
+    new Date(
+        year,
+        month,
+        0
+    ).getDate();
+
+    for(let day=1; day<=daysInMonth; day++){
+
+        const btn =
+        document.createElement("button");
+
+        btn.textContent =
+day.toString().padStart(2,"0");
+
+
+const thisDay =
+`${year}-${month}-${day
+    .toString()
+    .padStart(2,"0")}`;
+
+if(thisDay === selectedDay){
+
+    btn.classList.add("active");
+
+}const today =
+new Date()
+.toISOString()
+.split("T")[0];
+
+if(thisDay === today){
+
+    btn.classList.add("today");
+
+}
+
+btn.addEventListener("click",()=>{
+
+    const [year,month] =
+    selectedMonth.split("-");
+
+    selectedDay =
+        `${year}-${month}-${day
+            .toString()
+            .padStart(2,"0")}`;
+            buildDayPopup();
+
+    const today =
+    new Date()
+    .toISOString()
+    .split("T")[0];
+
+    document
+    .getElementById("currentDayLabel")
+    .textContent =
+
+    selectedDay === today
+
+    ? "📆 Σήμερα"
+
+    : "📆 " +
+      formatDate(selectedDay);
+
+    document
+    .getElementById("dayPopup")
+    .classList.remove("show");
+
+    render();
+
+});
+
+dayGrid.appendChild(btn);
+
+    }
+
+}
 
 function render(){
 
     let total = 0;
+    let dailyTotal = 0;
+    let monthlyTotal = 0;
+
+const targetDay =
+
+    selectedDay ||
+
+    new Date()
+    .toISOString()
+    .split("T")[0];
 
     const list =
         document.getElementById("expenses");
 
     list.innerHTML = "";
+expenses.forEach(item => {
 
+    if(
+        item.date.startsWith(
+            selectedMonth
+        )
+    ){
+
+        monthlyTotal += item.amount;
+
+    }
+
+});
     const filteredExpenses =
     expenses.filter(item => {
 
@@ -133,6 +330,17 @@ function render(){
             item.date.startsWith(
                 selectedMonth
             );
+            const targetDay =
+
+    selectedDay ||
+
+    new Date()
+    .toISOString()
+    .split("T")[0];
+
+const dayMatch =
+
+    item.date === targetDay;
 
         const searchMatch =
 
@@ -161,6 +369,7 @@ function render(){
     item.category === selectedCategory;
 
 return monthMatch &&
+       dayMatch &&
        searchMatch &&
        categoryMatch;
 
@@ -175,6 +384,11 @@ const sortedExpenses =
     sortedExpenses.forEach((item,index)=>{
 
         total += item.amount;
+        if(item.date === targetDay){
+
+    dailyTotal += item.amount;
+
+}
 
         list.innerHTML += `
 <div class="expense">
@@ -193,8 +407,8 @@ const sortedExpenses =
     </div>
 
     <div class="expense-date">
-        ${item.date}
-    </div>
+    ${formatDate(item.date)}
+</div>
 
     ${
         item.note
@@ -223,7 +437,7 @@ const sortedExpenses =
     });
 
     document.getElementById("total").innerText =
-        total.toFixed(2) + "€";
+    monthlyTotal.toFixed(2) + "€";
 
     const entries =
         document.getElementById("entriesCount");
@@ -232,6 +446,11 @@ const sortedExpenses =
         entries.innerText =
     filteredExpenses.length;
     }
+    document
+.getElementById("dailyTotal")
+.textContent =
+
+dailyTotal.toFixed(2) + "€";
 
 }
 function getCategoryIcon(category){
@@ -349,6 +568,10 @@ const statsSection =
 document.getElementById("statsSection");
 const settingsSection =
 document.getElementById("settingsSection");
+const summaryCard =
+document.getElementById(
+    "dashboardCard"
+);
 navButtons.forEach((btn,index)=>{
 
     btn.addEventListener("click",()=>{
@@ -361,6 +584,9 @@ navButtons.forEach((btn,index)=>{
 
         if(index === 0){
 
+        summaryCard.style.display =
+    "block";
+
             expensesSection.style.display =
                 "flex";
 
@@ -372,6 +598,8 @@ navButtons.forEach((btn,index)=>{
         }
 
         if(index === 1){
+            summaryCard.style.display =
+    "none";
 
             expensesSection.style.display =
                 "none";
@@ -386,6 +614,8 @@ navButtons.forEach((btn,index)=>{
         }
 
         if(index === 2){
+            summaryCard.style.display =
+    "none";
 
             expensesSection.style.display =
                 "none";
@@ -1040,9 +1270,8 @@ if ("serviceWorker" in navigator) {
 }
 const monthPopup =
     document.getElementById("monthPopup");
-
 document
-.querySelector(".month-arrow")
+.getElementById("currentMonthLabel")
 .addEventListener("click",(e)=>{
 
     e.stopPropagation();
@@ -1070,26 +1299,64 @@ document
     "#monthPopup button"
 )
 .forEach(btn=>{
+if(
+    btn.dataset.month ===
+    selectedMonth.split("-")[1]
+){
 
-    btn.addEventListener("click",()=>{
+    btn.classList.add(
+        "active-month"
+    );
 
-        const year =
-            selectedMonth.split("-")[0];
+}
+const currentMonth =
+new Date()
+.toISOString()
+.slice(5,7);
 
-        selectedMonth =
-            year +
-            "-" +
-            btn.dataset.month;
+if(
+    btn.dataset.month ===
+    currentMonth
+){
 
-        updateMonthLabel();
+    btn.classList.add(
+        "today-month"
+    );
 
-        render();
+}
+   btn.addEventListener("click",()=>{
 
-        monthPopup.classList.remove(
-            "show"
-        );
+    const year =
+        selectedMonth.split("-")[0];
 
-    });
+    selectedMonth =
+        year +
+        "-" +
+        btn.dataset.month;
+
+    document
+    .querySelectorAll("#monthPopup button")
+    .forEach(b =>
+        b.classList.remove("active-month")
+    );
+
+    btn.classList.add("active-month");
+
+    selectedDay = "";
+
+    document
+    .getElementById("currentDayLabel")
+    .textContent =
+        "📆 Σήμερα";
+
+    updateMonthLabel();
+    buildDayPopup();
+
+    render();
+
+    monthPopup.classList.remove("show");
+
+});
 
 });
 document
